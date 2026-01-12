@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          # Extract the changelog section for this version
+          VERSION=${{ steps.version.outputs.VERSION }}
+          CHANGELOG=$(awk "/## \[${VERSION}\]/{flag=1; next} /## \[/{flag=0} flag" CHANGELOG.md)
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: thirdeye v${{ steps.version.outputs.VERSION }}
+          body: |
+            ## thirdeye OS v${{ steps.version.outputs.VERSION }}
+
+            ${{ steps.changelog.outputs.CHANGELOG }}
+
+            ---
+
+            ### Installation
+
+            ```bash
+            cd your-obsidian-vault
+            git clone https://github.com/saiso12/thirdeye.git .thirdeye
+            ```
+
+            Or update existing installation:
+
+            ```bash
+            cd your-obsidian-vault/.thirdeye
+            git pull origin main
+            ```
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.VERSION, '-') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update VERSION file
+        run: |
+          echo "${{ steps.version.outputs.VERSION }}" > VERSION
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add VERSION
+          git commit -m "chore: bump VERSION to ${{ steps.version.outputs.VERSION }}" || true
+          git push origin HEAD:main || true
