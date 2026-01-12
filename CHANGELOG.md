@@ -7,8 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-01-12
+
 ### Added
-- Placeholder for upcoming features
+- First stable release of thirdeye OS
+- Complete skill suite for personal knowledge management
+- Versioned OS infrastructure with automated releases
+- soul.md establishing core philosophy and principles
+- OS health agent placeholder for future self-monitoring
+
+### Foundation
+- Three-layer architecture: Soul (why) → OS (how) → Data (what)
+- Cascading review system: Daily → Weekly → Monthly → Quarterly → Yearly
+- 7 core skills for Obsidian integration
+- 4 template categories covering ideas, meta, periodic reviews, and projects
 
 ## [0.1.0] - 2026-01-12
 
@@ -27,5 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub repository setup
 - .thirdeye/ folder structure inside vault
 
-[Unreleased]: https://github.com/saiso12/thirdeye/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/saiso12/thirdeye/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/saiso12/thirdeye/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/saiso12/thirdeye/releases/tag/v0.1.0
